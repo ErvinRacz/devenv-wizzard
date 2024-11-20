@@ -34,6 +34,6 @@ map <c-o> goBack
 ```
 
 
-1. Install chezmoi
+1. Install chezmoi (Every time you change your config template you must also run chezmoi init to regenerate your config.)
 2. `New-Item -Path "C:\Workspace\devenv-wizzard" -ItemType SymbolicLink -Value "$env:USERPROFILE\.local\share\chezmoi"`
 3. Install Config
