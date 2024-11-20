@@ -1,4 +1,3 @@
-follow = true # follow symlinks, so we can symlink ~\Documents to ~\OneDrive\Documents
 [git]
   autoPush = true
 [cd]

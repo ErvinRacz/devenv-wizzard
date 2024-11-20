@@ -150,4 +150,11 @@ properties:
       settings:
         id: twpayne.chezmoi
         source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install 'Neovim'
+        allowPrerelease: true
+      settings:
+        id: Neovim.Neovim
+        source: winget
   configurationVersion: 0.2.0
