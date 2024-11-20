@@ -1,3 +1,6 @@
+{{- $workspacePath := promptStringOnce . "workspacePath" "Type in the path to your workspace directory, e.g.: \"C:\\\\Workspace\" (use quotes). " -}}
+[data]
+  workspacePath = {{ $workspacePath }}
 [git]
   autoPush = true
 [cd]

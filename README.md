@@ -1,5 +1,5 @@
 
-`$env:WORKSPACE_PATH = "C:\Workspace" ; & {$env:DOTFILE_REPO_URL = "https://github.com/ErvinRacz/devenv-wizzard.git" ; iex "&{$(irm 'https://get.chezmoi.io/ps1')} -b '$env:TEMP\bin' -- init --apply $env:DOTFILE_REPO_URL"}`
+`& {$env:DOTFILE_REPO_URL = "https://github.com/ErvinRacz/devenv-wizzard.git" ; iex "&{$(irm 'https://get.chezmoi.io/ps1')} -b '$env:TEMP\bin' -- init --apply $env:DOTFILE_REPO_URL"}`
 
 2. `New-Item -Path "C:\Workspace\devenv-wizzard" -ItemType SymbolicLink -Value "$env:USERPROFILE\.local\share\chezmoi"`
 3. Install Config
