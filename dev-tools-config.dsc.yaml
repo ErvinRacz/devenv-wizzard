@@ -1,0 +1,153 @@
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+# Learn about possibilities here: https://learn.microsoft.com/en-us/windows/package-manager/configuration/create
+properties:
+  assertions:
+    - resource: Microsoft.Windows.Developer/OsVersion
+      directives:
+        description: Verify min OS version requirement
+        allowPrerelease: true
+      settings:
+        MinVersion: '10.0.22000'
+  resources:
+
+    #####
+    ## Basic Windows Settings
+    #####
+
+    - resource: Microsoft.Windows.Developer/DeveloperMode
+      directives:
+        description: Enable Developer Mode
+        allowPrerelease: true
+      settings:
+        Ensure: Present
+    - resource: Microsoft.Windows.Developer/Taskbar
+      directives:
+        description: Modify taskbar settings
+        allowPrerelease: true
+      settings:
+        Alignment: Middle # [KeepCurrentValue, Middle]
+        HideLabelsMode: Always # [KeepCurrentValue, WhenFull, Always]
+        SearchBoxMode: ShowIconAndLabel # [KeepCurrentValue, ShowIconOnly, SearchBox, Hide]
+        TaskViewButton: Show # [KeepCurrentValue, Hide]
+        WidgetsButton: Show # [KeepCurrentValue, Hide]
+        RestartExplorer: True # Use caution when setting `RestartExplorer: true` as this will force explorer to close. Required for `HideLabelsMode`.
+    - resource: Microsoft.Windows.Developer/WindowsExplorer
+      directives:
+        description: Modify Windows Explorer settings
+        allowPrerelease: true
+      settings:
+        FileExtensions: Show # [KeepCurrentValue, Hide]
+        HiddenFiles: Show # [KeepCurrentValue, Hide]
+        ItemCheckBoxes: Hide # [KeepCurrentValue, Hide]
+        RestartExplorer: True # Use caution when setting `RestartExplorer: true` as this will force explorer to close. Required for all WindowsExplorer settings.
+    - resource: Microsoft.Windows.Developer/EnableDarkMode
+      directives:
+        description: Enable dark mode
+        allowPrerelease: true
+      settings:
+        Ensure: Present
+        # Use caution when setting `RestartExplorer: true` as this will force explorer to close.
+        RestartExplorer: true # Required to apply changes
+
+    #####
+    ## PowerToys
+    #####
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install PowerToys
+        allowPrerelease: true
+      settings:
+        id: Microsoft.PowerToys
+        source: winget
+    - resource: PowerToysConfigure
+      directives:
+        description: Configure PowerToys
+      settings:
+        PowerLauncher:
+          OpenPowerLauncher: "Win+Space"
+        MouseHighlighter:
+          Enabled: false
+        CropAndLock:
+          Enabled: false
+        Peek:
+          Enabled: false
+        Workspaces:
+          Enabled: false
+        FancyZones:
+          Enabled: true
+          FancyzonesEditorHotkey: "Shift+Ctrl+Alt+F"
+    
+    #####
+    ## AutoHotkey
+    #####
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install 'autohotkey'
+        allowPrerelease: true
+      settings:
+        id: AutoHotkey.AutoHotkey
+        source: winget
+
+    #####
+    ## Installs
+    #####
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install Git
+        allowPrerelease: true
+      settings:
+        id: Git.Git
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install latest PowerShell
+        allowPrerelease: true
+      settings:
+        id: Microsoft.PowerShell
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install 'Oh My Posh'
+        allowPrerelease: true
+      settings:
+        id: JanDeDobbeleer.OhMyPosh
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install 'fd' file finder
+        allowPrerelease: true
+      settings:
+        id: sharkdp.fd
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install 'ripgrep'
+        allowPrerelease: true
+      settings:
+        id: BurntSushi.ripgrep.MSVC
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install 'starship' cross shell prompt
+        allowPrerelease: true
+      settings:
+        id: Starship.Starship
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install 'wezterm'
+        allowPrerelease: true
+      settings:
+        id: wez.wezterm
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install 'chezmoi' dotfile manager
+        allowPrerelease: true
+      settings:
+        id: twpayne.chezmoi
+        source: winget
+  configurationVersion: 0.2.0
