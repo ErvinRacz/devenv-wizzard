@@ -1,24 +1,12 @@
-Learn about DSC here:
-https://www.youtube.com/watch?v=9HlM0xuu01M
-https://learn.microsoft.com/en-us/windows/package-manager/configuration/create
 
-Recommended DSC resources:
-https://www.powershellgallery.com/packages
-https://dsccommunity.org/
+`$env:WORKSPACE_PATH = "C:\Workspace" ; & {$env:DOTFILE_REPO_URL = "https://github.com/ErvinRacz/devenv-wizzard.git" ; iex "&{$(irm 'https://get.chezmoi.io/ps1')} -b '$env:TEMP\bin' -- init --apply $env:DOTFILE_REPO_URL"}`
+
+2. `New-Item -Path "C:\Workspace\devenv-wizzard" -ItemType SymbolicLink -Value "$env:USERPROFILE\.local\share\chezmoi"`
+3. Install Config
 
 
-Look for a package:
-`winget search nuget`
 
-verify: `winget show --id <id>`
 
-`winget upgrade`
-`winget uninstall <name/id>`
-
-`winget features`
-
-Apply configuration as admin:
-`winget configure .\dev-tools-config.dsc.yaml`
 
 ## 2. Install Edge Extensions:
 - https://github.com/gdh1995/vimium-c
@@ -34,6 +22,24 @@ map <c-o> goBack
 ```
 
 
-1. Install chezmoi (Every time you change your config template you must also run chezmoi init to regenerate your config.)
-2. `New-Item -Path "C:\Workspace\devenv-wizzard" -ItemType SymbolicLink -Value "$env:USERPROFILE\.local\share\chezmoi"`
-3. Install Config
+to learn more:
+
+Learn about DSC here:
+https://www.youtube.com/watch?v=9HlM0xuu01M
+https://learn.microsoft.com/en-us/windows/package-manager/configuration/create
+
+Recommended DSC resources:
+https://www.powershellgallery.com/packages
+https://dsccommunity.org/
+
+
+Look for a package:
+`winget search neovim`
+
+verify: `winget show --id <id>`
+
+`winget upgrade`
+`winget uninstall <name/id>`
+`winget features`
+
+`winget configure .\dev-tools-config.dsc.yaml`
