@@ -1,0 +1,12 @@
+follow = true # follow symlinks, so we can symlink ~\Documents to ~\OneDrive\Documents
+[data]
+  shell = "PowerShell"
+  shellexe = "pwsh.exe"
+[cd]
+  command = "pwsh"
+  args = ["-NoProfile", "-NoLogo"]
+[diff]
+  pager = "delta"
+[interpreters.ps1]
+  command = "pwsh"
+  args = ["-NoLogo", "-NoProfile"]
