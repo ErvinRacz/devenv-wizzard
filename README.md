@@ -32,3 +32,8 @@ map <c-u> scrollUp
 map <c-i> goForward
 map <c-o> goBack
 ```
+
+
+1. Install chezmoi
+2. `New-Item -Path "C:\Workspace\devenv-wizzard" -ItemType SymbolicLink -Value "$env:USERPROFILE\.local\share\chezmoi"`
+3. Install Config
