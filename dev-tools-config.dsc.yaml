@@ -164,4 +164,11 @@ properties:
       settings:
         id: dandavison.delta
         source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install 'jq' json query language
+        allowPrerelease: true
+      settings:
+        id: jqlang.jq
+        source: winget
   configurationVersion: 0.2.0

@@ -1,6 +1,6 @@
 # Define variables
 $chezmoiPath = "$env:USERPROFILE\.local\share\chezmoi"
-$destinationBasePath = "C:\Workspace"
+$destinationBasePath = "{{ .workspace.path }}"
 
 # Ensure the chezmoi directory exists
 if (-Not (Test-Path -Path $chezmoiPath)) {
