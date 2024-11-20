@@ -157,4 +157,11 @@ properties:
       settings:
         id: Neovim.Neovim
         source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install 'delta' for diffs
+        allowPrerelease: true
+      settings:
+        id: dandavison.delta
+        source: winget
   configurationVersion: 0.2.0
