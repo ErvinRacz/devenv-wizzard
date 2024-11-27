@@ -1,0 +1,115 @@
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+properties:
+  configurationVersion: 0.2.0
+  resources:
+    ### This is not needed as PSDscResources should already be installed
+    # - resource: Script
+    #   id: InstallPSDscResources
+    #   directives:
+    #     description: "Install PSDscResources module"
+    #   settings:
+    #     GetScript: |
+    #       if (Get-Module -ListAvailable -Name PSDscResources) {
+    #           Write-Output "Installed"
+    #       } else {
+    #           Write-Output "NotInstalled"
+    #       }
+    #     TestScript: |
+    #       $module = Get-Module -ListAvailable -Name PSDscResources
+    #       return $module -ne $null
+    #     SetScript: |
+    #       Install-Module -Name PSDscResources -Force -SkipPublisherCheck -AllowClobber
+
+    # - resource: "PSDscResources/WindowsOptionalFeature"
+    #   id: EnableWSL
+    #   directives:
+    #     description: "Enable Windows Subsystem for Linux"
+    #   settings:
+    #     Name: "Microsoft-Windows-Subsystem-Linux"
+    #     Ensure: "Present"
+
+    # - resource: Microsoft.WinGet.DSC/WinGetPackage
+    #   id: InstallUbuntu
+    #   dependsOn:
+    #     - EnableWSL
+    #   directives:
+    #     description: Install Ubuntu 24.04
+    #     allowPrerelease: true
+    #   settings:
+    #     id: Canonical.Ubuntu.2404
+    #     source: winget
+    #     useLatest: true
+
+    - resource: PSDscResources/Script
+      id: SetDefaultWSLDistro
+      # dependsOn:
+      #   - InstallUbuntu
+      directives:
+        description: Set Ubuntu 24.04 as the default WSL distribution
+        allowPrerelease: true
+      settings:
+        GetScript: |
+          $cleanedStr = (wsl --list --verbose | Out-String) -replace '\s', ''
+          $filteredString = -join ($cleanedStr.ToCharArray() | Where-Object { $_ -match '[UuBbTtNnUu]' })
+          return $filteredString.Contains("Ubuntu")
+        TestScript: |
+          $cleanedStr = (wsl --list --verbose | Out-String) -replace '\s', ''
+          $filteredString = -join ($cleanedStr.ToCharArray() | Where-Object { $_ -match '[UuBbTtNnUu]' })
+          return $filteredString.Contains("Ubuntu")
+        SetScript: |
+          # Set Ubuntu-24.04 as the default WSL distribution
+          wsl --set-default Ubuntu-24.04
+
+    # Script resource to install Ansible on Ubuntu in WSL
+    - resource: PSDscResources/Script
+      id: InstallAnsible
+      dependsOn:
+        - SetDefaultWSLDistro  # Ensure this runs after setting Ubuntu as default WSL distribution
+      directives:
+        description: Install Ansible in the default WSL Ubuntu distribution
+        allowPrerelease: true
+      settings:
+        GetScript: |
+          # Check if Ansible is installed in WSL
+          $ansibleInstalled = wsl bash -c "command -v ansible"
+          if ($-not [string]::IsNullOrWhiteSpace($ansibleInstalled)) {
+            Write-Output "Ansible is installed."
+          } else {
+            Write-Output "Ansible is not installed."
+          }
+        TestScript: |
+          # Return true if Ansible is installed in WSL
+          $ansibleInstalled = wsl bash -c "command -v ansible"
+          return -not [string]::IsNullOrWhiteSpace($ansibleInstalled)
+        SetScript: |
+          wsl bash -c "sudo apt update -y > /tmp/apt_update.log 2>&1 && \
+          sudo apt install -y software-properties-common > /tmp/apt_update.log 2>&1 && \
+          sudo add-apt-repository --yes --update ppa:ansible/ansible > /tmp/apt_update.log 2>&1 && \
+          sudo apt install -y ansible > /tmp/apt_update.log 2>&1 &&
+          ansible --version
+          "
+
+    # Script resource to install chezmoi on Ubuntu in WSL
+    - resource: PSDscResources/Script
+      id: InstallChezmoi
+      dependsOn:
+        - InstallAnsible  # Ensure this runs after Ansible is installed in WSL
+      directives:
+        description: Install chezmoi and run the Ansible playbook in WSL
+        allowPrerelease: true
+      settings:
+        GetScript: |
+          # Check if chezmoi is installed
+          $chezmoiInstalled = wsl bash -c "command -v chezmoi"
+          if ($-not [string]::IsNullOrWhiteSpace($chezmoiInstalled)) {
+            Write-Output "Chezmoi is installed."
+          } else {
+            Write-Output "Chezmoi is not installed."
+          }
+        TestScript: |
+          # Return true if chezmoi is installed in WSL
+          $chezmoiInstalled = wsl bash -c "command -v chezmoi"
+          return -not [string]::IsNullOrWhiteSpace($chezmoiInstalled)
+        SetScript: |
+          # Install chezmoi in WSL if not installed
+          wsl bash -c "cd $(( $env:USERPROFILE -replace '\\', '/' -replace 'C:/', '/mnt/c/' ) + '/.local/share/chezmoi/ansible') && ansible-playbook -i localhost, --connection=local -e ansible_python_interpreter=/usr/bin/python3 chezmoi-install.yaml > /tmp/ansible.log 2>&1"

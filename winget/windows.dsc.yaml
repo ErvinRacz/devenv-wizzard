@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
-# Learn about possibilities here: https://learn.microsoft.com/en-us/windows/package-manager/configuration/create
 properties:
+  configurationVersion: 0.2.0
   assertions:
     - resource: Microsoft.Windows.Developer/OsVersion
       directives:
@@ -77,7 +77,7 @@ properties:
         FancyZones:
           Enabled: true
           FancyzonesEditorHotkey: "Shift+Ctrl+Alt+F"
-    
+
     #####
     ## AutoHotkey
     #####
@@ -89,86 +89,3 @@ properties:
       settings:
         id: AutoHotkey.AutoHotkey
         source: winget
-
-    #####
-    ## Installs
-    #####
-
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
-        description: Install Git
-        allowPrerelease: true
-      settings:
-        id: Git.Git
-        source: winget
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
-        description: Install latest PowerShell
-        allowPrerelease: true
-      settings:
-        id: Microsoft.PowerShell
-        source: winget
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
-        description: Install 'Oh My Posh'
-        allowPrerelease: true
-      settings:
-        id: JanDeDobbeleer.OhMyPosh
-        source: winget
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
-        description: Install 'fd' file finder
-        allowPrerelease: true
-      settings:
-        id: sharkdp.fd
-        source: winget
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
-        description: Install 'ripgrep'
-        allowPrerelease: true
-      settings:
-        id: BurntSushi.ripgrep.MSVC
-        source: winget
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
-        description: Install 'starship' cross shell prompt
-        allowPrerelease: true
-      settings:
-        id: Starship.Starship
-        source: winget
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
-        description: Install 'wezterm'
-        allowPrerelease: true
-      settings:
-        id: wez.wezterm
-        source: winget
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
-        description: Install 'chezmoi' dotfile manager
-        allowPrerelease: true
-      settings:
-        id: twpayne.chezmoi
-        source: winget
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
-        description: Install 'Neovim'
-        allowPrerelease: true
-      settings:
-        id: Neovim.Neovim
-        source: winget
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
-        description: Install 'delta' for diffs
-        allowPrerelease: true
-      settings:
-        id: dandavison.delta
-        source: winget
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
-        description: Install 'jq' json query language
-        allowPrerelease: true
-      settings:
-        id: jqlang.jq
-        source: winget
-  configurationVersion: 0.2.0

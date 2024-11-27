@@ -1,12 +1,16 @@
+Install on Windows:
+`& {$env:DOTFILE_REPO_URL = "https://github.com/ErvinRacz/devenv-wizzard.git" ; iex "&{$(irm 'https://get.chezmoi.io/ps1')} -b '$env:USERPROFILE\.temp\bin' -- init --apply $env:DOTFILE_REPO_URL"}`
 
-`& {$env:DOTFILE_REPO_URL = "https://github.com/ErvinRacz/devenv-wizzard.git" ; iex "&{$(irm 'https://get.chezmoi.io/ps1')} -b '$env:TEMP\bin' -- init --apply $env:DOTFILE_REPO_URL"}`
+Install on Ubuntu:
 
-2. `New-Item -Path "C:\Workspace\devenv-wizzard" -ItemType SymbolicLink -Value "$env:USERPROFILE\.local\share\chezmoi"`
-3. Install Config
+Update ansible on WSL ubuntu:
+`wsl bash -c "cd $(( $env:USERPROFILE -replace '\\', '/' -replace 'C:/', '/mnt/c/' ) + '/.local/share/chezmoi/ansible') && ansible-playbook -i localhost, --connection=local ubuntu-installs.yaml"`
 
+Update Ubuntu state in WSL based on the ansible script via:
 
-
-
+```shell
+wsl bash -c "cd $(( $env:USERPROFILE -replace '\\', '/' -replace 'C:/', '/mnt/c/' ) + '/.local/share/chezmoi/ansible') && ansible-playbook -i localhost, --connection=local ubuntu-installs.yaml"
+```
 
 ## 2. Install Edge Extensions:
 - https://github.com/gdh1995/vimium-c

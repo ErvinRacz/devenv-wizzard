@@ -1,0 +1,39 @@
+---
+- name: Install chezmoi from GitHub releases
+  hosts: localhost
+  become: true
+
+  tasks:
+    - name: Set the download URL for chezmoi based on OS and architecture
+      set_fact:
+        chezmoi_url: |
+          {% if ansible_facts['os_family'] == 'Debian' %}
+            {% if ansible_facts['architecture'] == 'x86_64' %}
+              https://github.com/twpayne/chezmoi/releases/download/v2.54.0/chezmoi_2.54.0_linux_amd64.tar.gz
+            {% elif ansible_facts['architecture'] == 'aarch64' %}
+              https://github.com/twpayne/chezmoi/releases/download/v2.54.0/chezmoi_2.54.0_linux_arm64.tar.gz
+            {% endif %}
+          {% endif %}
+
+    - name: Download chezmoi binary
+      ansible.builtin.get_url:
+        url: "{{ chezmoi_url }}"
+        dest: "/tmp/chezmoi.tar.gz"
+
+    - name: Extract chezmoi binary
+      ansible.builtin.unarchive:
+        src: "/tmp/chezmoi.tar.gz"
+        dest: "/usr/local/bin/"
+        remote_src: yes
+        creates: "/usr/local/bin/chezmoi"
+
+    - name: Make chezmoi executable
+      ansible.builtin.file:
+        path: "/usr/local/bin/chezmoi"
+        mode: '0755'
+
+    - name: Create symlink from ~/Workspace to /mnt/c/Workspace/
+      ansible.builtin.file:
+        src: /mnt/c/Workspace/
+        dest: ~/Workspace
+        state: link
