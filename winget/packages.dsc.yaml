@@ -52,6 +52,16 @@ properties:
         id: twpayne.chezmoi
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: zig
+      directives:
+        description: Install 'Zig' for its C compiler capabilities
+        allowPrerelease: true
+      settings:
+        id: zig.zig
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      dependsOn:
+        - zig
       directives:
         description: Install 'Neovim'
         allowPrerelease: true
