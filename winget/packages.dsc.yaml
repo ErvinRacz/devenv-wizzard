@@ -68,6 +68,13 @@ properties:
       settings:
         id: Neovim.Neovim
         source: winget
+    - resource: Environment
+      directives:
+        module: PSDscResources
+      settings:
+        Name: 'XDG_CONFIG_HOME'
+        Ensure: 'present'
+        Value: '%USERPROFILE%\.config'
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install 'delta' for diffs

@@ -1,3 +1,6 @@
+TODO: https://github.com/apps/desktop
+
+
 Install on Windows:
 `& {$env:DOTFILE_REPO_URL = "https://github.com/ErvinRacz/devenv-wizzard.git" ; iex "&{$(irm 'https://get.chezmoi.io/ps1')} -b '$env:USERPROFILE\.temp\bin' -- init --apply $env:DOTFILE_REPO_URL"}`
 
