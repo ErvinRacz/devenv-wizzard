@@ -30,7 +30,7 @@ disabled = true
 # Customize the format of the working directory
 [directory]
 truncate_to_repo = true
-format = "[ﱮ $path ]($style)"
+format = "[  $path ]($style)"
 style = "fg:text bg:#3B76F0"
 
 [git_branch]
@@ -53,7 +53,7 @@ display_private = true
 # Output the command duration if over 2 seconds
 [cmd_duration]
 min_time = 2_000
-format = "[  $duration ]($style)"
+format = "[  $duration ]($style)"
 style = "white"
 
 # Customize the battery indicator
@@ -73,7 +73,7 @@ description = "Output the current git user's configured email address."
 command = "git config user.email"
 format = "\n[$symbol(  $output)]($style)"
 # Only when inside git repository
-when = "git rev-parse --is-inside-work-tree >/dev/null 2>&1"
+when = "git rev-parse --is-inside-work-tree > $null 2>&1"
 style = "text"
 
 # Output a styled separator right after the directory when inside a git repository.
@@ -82,7 +82,7 @@ description = "Output a styled separator right after the directory when inside a
 command = ""
 format = "[](fg:#3B76F0 bg:#FCF392)"
 # Only when inside git repository
-when = "git rev-parse --is-inside-work-tree >/dev/null 2>&1"
+when = "git rev-parse --is-inside-work-tree > $null 2>&1"
 
 # Output a styled separator right after the directory when NOT inside a git repository.
 [custom.directory_separator_not_git]
@@ -90,8 +90,7 @@ description = "Output a styled separator right after the directory when NOT insi
 command = ""
 format = "[](fg:#3B76F0)"
 # Only when NOT inside a git repository
-when = "! git rev-parse --is-inside-work-tree > /dev/null 2>&1"
-
+when = "git rev-parse --is-inside-work-tree; if ($?) { throw 'false' } else { $true }"
 
 
 
