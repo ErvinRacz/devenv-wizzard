@@ -101,3 +101,38 @@ properties:
       settings:
         id: jqlang.jq
         source: winget
+    ### -------------------------------------
+    ### Install Chocolatey
+    ### -------------------------------------
+    - resource: cChoco/cChocoInstaller
+      id: choco
+      directives:
+        description: Install Choco
+        allowPrerelease: true
+      settings:
+        InstallDir: 'c:\choco'
+    ### -------------------------------------
+    - resource: cChoco/cChocoPackageInstaller
+      id: watchmanInstall
+      directives:
+        description: Choco install watchman
+        allowPrerelease: true
+      dependsOn:
+        - choco
+      settings:
+        Name: watchman
+
+    ###
+    # Leave it here as example, but no need for it as we can add files with chezmoi
+    ###
+    # - resource: File
+    #   id: CopyStartupScript
+    #   dependsOn:
+    #     - watchmanInstall
+    #   directives:
+    #     description: Ensure the startup script is copied to the Startup folder
+    #   settings:
+    #     DestinationPath: "$env:APPDATA\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\run_once_and-on-startup.ps1"
+    #     SourcePath: "$(chezmoi source-path)\\dotfiles\\.chezmoiscripts\\run_once_and-on-startup.ps1"
+    #     Ensure: "Present"
+    #     Type: "File"

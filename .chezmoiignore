@@ -1,5 +1,6 @@
 {{ if ne .chezmoi.os "windows" }}
 readonly_OneDrive*
+dot_wezterm.lua
 {{ end }}
 {{ if ne .chezmoi.os "linux" }}
 .config/app/file.conf
