@@ -77,6 +77,8 @@ properties:
         FancyZones:
           Enabled: true
           FancyzonesEditorHotkey: "Shift+Ctrl+Alt+F"
+        FindMyMouse:
+          Enabled: false
 
     #####
     ## AutoHotkey

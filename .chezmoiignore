@@ -2,7 +2,7 @@
 readonly_OneDrive*
 AppData*
 dot_wezterm.lua
-*.ps1
+*/*.ps1
 {{ end }}
 {{ if ne .chezmoi.os "linux" }}
 .config/app/file.conf
