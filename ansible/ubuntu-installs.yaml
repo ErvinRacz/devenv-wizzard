@@ -153,3 +153,46 @@
 
       vars:
         fonts_dir: "{{ ansible_env.HOME }}/.local/share/fonts"
+
+    - name: Install Starship Prompt
+      block:
+        - name: Check if Starship is already installed
+          stat:
+            path: /usr/local/bin/starship
+          register: starship_installed
+
+        - name: Prompt user for confirmation to install Starship
+          ansible.builtin.pause:
+            prompt: "Starship is not installed. Do you want to install it using the shell script? (Press 'y' to continue)"
+          when: not starship_installed.stat.exists
+          register: user_input
+
+        - name: Install Starship via shell script
+          shell: |
+            curl -L -sS https://starship.rs/install.sh | sh -s -- --yes
+          args:
+            executable: /bin/bash
+          when:
+            - not starship_installed.stat.exists
+            - user_input.user_input == 'y'
+          register: install_result
+
+        - name: Display installation result
+          debug:
+            msg: "Starship installation was successful."
+          when: install_result is defined and install_result.rc == 0
+
+      rescue:
+        - name: Notify user of failed installation
+          debug:
+            msg: "Starship installation failed. Please check the error and try again."
+
+      always:
+        - name: Inform user of current state
+          debug:
+            msg: >
+              {%- if starship_installed.stat.exists -%}
+              Starship is already installed.
+              {%- else -%}
+              Starship was not installed. Skipped by user or failed.
+              {%- endif -%}
