@@ -21,6 +21,7 @@
         - make
         - jq
         - ripgrep
+        - delta
 
     - name: Install packages
       apt:

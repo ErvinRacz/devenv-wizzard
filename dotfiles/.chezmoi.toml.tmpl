@@ -11,12 +11,16 @@
 
 [git]
   autoPush = true
+
+
+{{ if eq .chezmoi.os "windows" }}
 [cd]
   command = "pwsh"
   args = ["-NoLogo"]
 [interpreters.ps1]
   command = "pwsh"
   args = ["-NoLogo"]
+{{ end }}
 [diff]
   command = "delta"
   pager = "delta"
