@@ -26,9 +26,9 @@ function M.on_save_callback()
         -- Run asynchronously
         vim.system({ "chezmoi", "apply", "--force" }, { detach = true }, function(result)
             if result.code == 0 then
-                print("ChezMoi changes applied!")
+                print("Chezmoi changes applied!")
             else
-                print("ChezMoi apply failed:", result.stderr)
+                print("Chezmoi apply failed:", result.stderr)
             end
         end)
     end

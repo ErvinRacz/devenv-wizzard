@@ -1,19 +1,20 @@
 TODO: https://github.com/apps/desktop
 
-
-Install on Windows:
+Install the stack with chezmoi on Windows:
 `& {$env:DOTFILE_REPO_URL = "https://github.com/ErvinRacz/devenv-wizzard.git" ; iex "&{$(irm 'https://get.chezmoi.io/ps1')} -b '$env:USERPROFILE\.temp\bin' -- init --apply $env:DOTFILE_REPO_URL"}`
 
-Install on Ubuntu:
+Add chezmoi config to WSL:
 
-Update ansible on WSL ubuntu:
-`wsl bash -c "cd $(( $env:USERPROFILE -replace '\\', '/' -replace 'C:/', '/mnt/c/' ) + '/.local/share/chezmoi/ansible') && ansible-playbook -i localhost, --connection=local ubuntu-installs.yaml"`
+```
+DOTFILE_REPO_URL = "https://github.com/ErvinRacz/devenv-wizzard.git" ; chezmoi -- init --apply $DOTFILE_REPO_URL
+```
 
-Update Ubuntu state in WSL based on the ansible script via:
+Update on WSL Ubuntu with andsible:
 
 ```shell
 wsl bash -c "cd $(( $env:USERPROFILE -replace '\\', '/' -replace 'C:/', '/mnt/c/' ) + '/.local/share/chezmoi/ansible') && ansible-playbook -i localhost, --connection=local ubuntu-installs.yaml"
 ```
+
 
 ## 2. Install Edge Extensions:
 - https://github.com/gdh1995/vimium-c

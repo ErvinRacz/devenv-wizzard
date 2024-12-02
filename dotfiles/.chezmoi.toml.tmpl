@@ -1,4 +1,5 @@
-{{- $workspacePath := promptStringOnce . "workspacePath" "Type in the path to your workspace directory, e.g.: 'C:/Workspace' (use quotes) " -}}
+## {{- $workspacePath := promptStringOnce . "workspacePath" "Type in the path to your workspace directory, e.g.: 'C:/Workspace' (use quotes) " -}}
+
 {{- $userEmail := "" -}}
 {{- if and (hasKey . "user") (hasKey .user "email") -}}
 {{-   $userEmail = .user.email -}}
@@ -6,8 +7,9 @@
 {{-   $userEmail = promptString "email" -}}
 {{- end -}}
 
-[data.workspace]
-  path = {{ $workspacePath }}
+## [data.workspace]
+##   path = {{ $workspacePath }}
+
 [data.user]
   email = "{{ $userEmail }}"
   name = "Ervin Rácz"

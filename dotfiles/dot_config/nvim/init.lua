@@ -608,6 +608,9 @@ require('lazy').setup({
       end
 
       local file_selection_mapping = {
+        additional_args = function(opts)
+            return {"--hidden"}
+        end,
         mappings = {
           i = {
             ['<tab>'] = actions.toggle_selection + actions.move_selection_previous,
