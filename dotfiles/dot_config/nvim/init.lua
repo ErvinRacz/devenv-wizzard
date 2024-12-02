@@ -849,7 +849,7 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        pyright = {},
+        -- pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -857,23 +857,15 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        tsserver = {
-          root_dir = lspconfig_util.root_pattern("package.json"),
-          single_file_support = false
-        },
-        denols = {
-          root_dir = lspconfig_util.root_pattern("deno.json", "deno,jsonc"),
-        },
-        bashls = {},
-        nil_ls = {
-          settings = {
-            ['nil'] = {
-              formatting = {
-                command = { "nixpkgs-fmt"}
-              }
-            }
-          },
-        },
+        -- TODO: renamed to something else like ts_ls if I'm not mistaken
+        -- tsserver = { 
+        --   root_dir = lspconfig_util.root_pattern("package.json"),
+        --   single_file_support = false
+        -- },
+        -- denols = {
+        --   root_dir = lspconfig_util.root_pattern("deno.json", "deno,jsonc"),
+        -- },
+        -- bashls = {},
         -- needs cargo presence, so install it via:
         -- nix profile install nixpkgs#cargo
         -- nix profile install nixpkgs#nixpkgs-fmt
@@ -1231,6 +1223,12 @@ require('lazy').setup({
       --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
       --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
     end,
+  },
+  {
+      dir = vim.fn.stdpath("config") .. "/lua/chezmoi/plugins",
+      config = function()
+          require("chezmoi.plugins").setup()
+      end,
   },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
