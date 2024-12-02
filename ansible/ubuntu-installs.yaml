@@ -2,6 +2,7 @@
 - name: Install packages on Ubuntu
   hosts: localhost
   vars:
+     - fonts_dir: "{{ ansible_env.HOME }}/.local/share/fonts"
      - go_version: 1.23.3
      - nvm_version: 0.40.0
   become: true
@@ -16,12 +17,14 @@
         name: "{{ item }}"
         state: latest  # Ensure the latest version is installed
       loop:
+        - gcc 
         - qemu-system-x86
         - qemu-utils
         - make
         - jq
         - ripgrep
         - delta
+        - unzip
 
     - name: Install packages
       apt:
@@ -120,3 +123,33 @@
       loop:
         - 16
         # - 14.18.3
+
+    - name: Install Fira Code Nerd Font
+      block:
+        - name: Ensure fonts directory exists
+          file:
+            path: "{{ fonts_dir }}"
+            state: directory
+            mode: '0755'
+
+        - name: Download Fira Code Nerd Font
+          get_url:
+            url: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/FiraCode.zip
+            dest: /tmp/FiraCode.zip
+            mode: '0644'
+          register: download_result
+
+        - name: Unzip the font archive
+          unarchive:
+            src: /tmp/FiraCode.zip
+            dest: "{{ fonts_dir }}"
+            remote_src: yes
+          when: download_result.changed
+
+        - name: Update font cache
+          command: fc-cache -fv
+          when: download_result.changed
+          notify: Font cache updated
+
+      vars:
+        fonts_dir: "{{ ansible_env.HOME }}/.local/share/fonts"
