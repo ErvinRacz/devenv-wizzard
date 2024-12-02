@@ -12,8 +12,7 @@
 [git]
   autoPush = true
 
-
-{{ if eq .chezmoi.os "windows" }}
+{{ if ne .chezmoi.os "windows" }}
 [cd]
   command = "pwsh"
   args = ["-NoLogo"]
