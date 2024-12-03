@@ -176,12 +176,6 @@
           when:
             - not starship_installed.stat.exists
             - user_input.user_input == 'y'
-          register: install_result
-
-        - name: Display installation result
-          debug:
-            msg: "Starship installation was successful."
-          when: install_result is defined and install_result.rc == 0
 
       rescue:
         - name: Notify user of failed installation
