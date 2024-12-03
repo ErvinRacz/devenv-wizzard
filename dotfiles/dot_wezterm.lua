@@ -12,7 +12,7 @@ config.default_prog = { 'wsl.exe', '-d', 'Ubuntu-24.04', '--cd', '~' }
 config.window_decorations = "INTEGRATED_BUTTONS|RESIZE"
 config.hide_tab_bar_if_only_one_tab = true
 
-config.window_background_opacity = 1
+config.window_background_opacity = 0.1
 -- config.window_background_opacity = 0
 -- config.win32_system_backdrop = 'Tabbed'
 -- config.front_end = "OpenGL" -- needed for backdrop
