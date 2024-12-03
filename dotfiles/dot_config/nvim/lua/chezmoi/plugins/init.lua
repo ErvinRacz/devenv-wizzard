@@ -15,8 +15,8 @@ local function is_root_chezmoi_source_path()
     end
 
     local chezmoi_source_path = vim.fn.expand(chezmoi_source_path)
-    -- print(chezmoi_source_path)
-    -- print(root_dir)
+    print(chezmoi_source_path)
+    print(root_dir)
     return root_dir == chezmoi_source_path
 end
 
@@ -36,6 +36,7 @@ end
 
 -- Setup function
 function M.setup()
+    print("test")
     vim.api.nvim_create_autocmd("BufWritePost", {
         callback = M.on_save_callback,
         desc = "Trigger chezmoi apply on save in chezmoi root directory",

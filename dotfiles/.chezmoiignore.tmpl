@@ -3,7 +3,9 @@ OneDrive\ -\ Microsoft/
 AppData
 .wezterm.lua
 */*.ps1
+*/*.ps1.tmpl
 {{ end }}
 {{ if ne .chezmoi.os "linux" }}
-.config/app/file.conf
+*/*.sh
+*/*.sh.tmpl
 {{ end }}
