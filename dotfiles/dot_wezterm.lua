@@ -5,10 +5,12 @@ local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
 
 -- This is where you actually apply your config choices
-config.default_prog = { 'pwsh.exe', '-NoLogo' }
+-- config.default_prog = { 'pwsh.exe', '-NoLogo' }
+config.default_prog = { 'wsl.exe', '-d', 'Ubuntu-24.04', '--cd', '~' }
 
 -- For example, changing the color scheme:
 config.window_decorations = "INTEGRATED_BUTTONS|RESIZE"
+config.hide_tab_bar_if_only_one_tab = true
 
 config.window_background_opacity = 1
 -- config.window_background_opacity = 0
