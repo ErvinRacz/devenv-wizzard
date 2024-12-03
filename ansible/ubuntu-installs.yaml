@@ -86,7 +86,7 @@
             path: ~/.profile
             line: |
               export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
-              export XDG_CONFIG_HOME="~/.config"
+              # export XDG_CONFIG_HOME="~/.config"
             create: true
             state: present
 
