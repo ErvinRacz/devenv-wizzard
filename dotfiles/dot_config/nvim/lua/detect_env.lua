@@ -5,7 +5,7 @@ function M.get_environment()
 
     if string.find(uname.sysname, "Windows") ~= nil then
         return "WINDOWS"
-    elseif string.find(uname.sysname, "Windows") ~= nil then
+    elseif string.find(uname.sysname, "Linux") ~= nil then
         return "LINUX"
     end
 

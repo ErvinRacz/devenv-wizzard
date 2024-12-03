@@ -18,5 +18,7 @@ config.window_background_opacity = 1
 config.initial_rows = 40
 config.initial_cols = 140
 
+config.default_domain = 'WSL:Ubuntu'
+
 -- and finally, return the configuration to wezterm
 return config

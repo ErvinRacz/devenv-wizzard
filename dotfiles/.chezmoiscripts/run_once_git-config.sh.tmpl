@@ -1,3 +1,5 @@
-git config --global user.email "{{ .user.email }}"
-git config --global user.name "{{ .user.name }}"
-git config pull.ff only
+#!/bin/bash
+
+git config --global user.email "{{ .user.email }}" && \
+git config --global user.name "{{ .user.name }}" && \
+git config --global pull.ff only

@@ -15,13 +15,20 @@ local function is_root_chezmoi_source_path()
     end
 
     local chezmoi_source_path = vim.fn.expand(chezmoi_source_path)
+<<<<<<< Updated upstream
     -- print(chezmoi_source_path)
     -- print(root_dir)
+=======
+    -- print("env: ", env)
+    -- print("chezmoi sp:", chezmoi_source_path)
+    -- print("root dir", root_dir)
+>>>>>>> Stashed changes
     return root_dir == chezmoi_source_path
 end
 
 -- Function to trigger on save
 function M.on_save_callback()
+    -- print(is_root_chezmoi_source_path())
     if is_root_chezmoi_source_path() then
         -- Run asynchronously
         vim.system({ "chezmoi", "apply", "--force" }, { detach = true }, function(result)
