@@ -28,11 +28,12 @@
         - gh
 
     - name: Install packages
-      apt:
+      snap:
         name: "{{ item }}"
         state: present  # Ensure package does not get upgraded if already present
+        classic: yes
       loop:
-        - neovim
+        - nvim
 
     # Install Docker
 
