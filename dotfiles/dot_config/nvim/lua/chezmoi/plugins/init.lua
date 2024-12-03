@@ -15,14 +15,9 @@ local function is_root_chezmoi_source_path()
     end
 
     local chezmoi_source_path = vim.fn.expand(chezmoi_source_path)
-<<<<<<< Updated upstream
-    -- print(chezmoi_source_path)
-    -- print(root_dir)
-=======
     -- print("env: ", env)
     -- print("chezmoi sp:", chezmoi_source_path)
     -- print("root dir", root_dir)
->>>>>>> Stashed changes
     return root_dir == chezmoi_source_path
 end
 
