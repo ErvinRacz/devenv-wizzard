@@ -24,25 +24,27 @@ end
 
 -- Function to find the pane with nvim
 local function find_nvim_pane(window)
-    for _, tab in ipairs(window:tabs()) do
-        for _, pane in ipairs(tab:panes()) do
-            if is_nvim(pane) then
-                return tab, pane
-            end
-        end
-    end
-    return nil, nil
+	local mux_win = mux.get_window(window:window_id())
+	for _, tab in ipairs(mux_win:tabs()) do
+		for _, pane in ipairs(tab:panes()) do
+			if is_nvim(pane) then
+				return tab, pane
+			end
+		end
+	end
+	return nil, nil
 end
 
 -- Action for Ctrl+Shift+T to go back to nvim tab
 wezterm.on("find-nvim-tab", function(window, pane)
-    local nvim_tab, nvim_pane = find_nvim_pane(window)
-    if nvim_tab then
-        wez_nvim_action(window, pane, act.ActivateTab(nvim_tab), act.SendKey({ key = "t", mods = "CTRL|SHIFT" }))
-    else
-        wezterm.log_info("No nvim tab found")
-        window:perform_action(act.SendKey({ key = "t", mods = "CTRL|SHIFT" }), pane)
-    end
+	local nvim_tab, _ = find_nvim_pane(window)
+	if nvim_tab then
+		wezterm.log_info("nvim_tab: ", nvim_tab)
+		wez_nvim_action(window, pane, act.ActivateTab(nvim_tab), act.SendKey({ key = "t", mods = "CTRL|SHIFT" }))
+	else
+		wezterm.log_info("No nvim tab found")
+		window:perform_action(act.SendKey({ key = "t", mods = "CTRL|SHIFT" }), pane)
+	end
 end)
 
 wezterm.on("move-tab-forward", function(window, pane)
