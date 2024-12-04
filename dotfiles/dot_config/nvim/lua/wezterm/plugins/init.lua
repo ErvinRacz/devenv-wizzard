@@ -43,4 +43,34 @@ function M.setup()
 	})
 end
 
+-- Function to switch tabs forward
+function M.switch_tabs_forward()
+	local current_tab = vim.api.nvim_get_current_tabpage()
+
+	local tabs = vim.api.nvim_list_tabpages()
+	local last_tab = tabs[#tabs]
+
+	print("current_tab", current_tab)
+	print("last_tab", last_tab)
+	vim.cmd("stopinsert")
+	if current_tab == last_tab then
+		vim.fn.system("wezterm.exe cli activate-tab --no-wrap --tab-relative 1")
+	else
+		vim.cmd("tabnext")
+	end
+end
+
+-- Function to switch tabs backward
+function M.switch_tabs_backward()
+	local current_tab = vim.api.nvim_get_current_tabpage()
+
+	vim.cmd("stopinsert")
+	if current_tab == 1  then
+		vim.fn.system("wezterm.exe cli activate-tab --no-wrap --tab-relative -1")
+	else
+		vim.cmd("tabprevious")
+	end
+end
+
+
 return M

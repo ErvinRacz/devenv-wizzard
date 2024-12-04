@@ -150,46 +150,6 @@ vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right win
 vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
-function GetTmuxWindowCount()
-	local command = "tmux list-windows | wc -l"
-	local handle = io.popen(command)
-	if not handle then
-		return 0
-	end
-	local result = handle:read("*a")
-	handle:close()
-
-	local count = tonumber(result)
-	return count
-end
-
--- Function to switch tabs forward
-function SwitchTabsForward()
-	local current_tab = vim.api.nvim_get_current_tabpage()
-
-	local tabs = vim.api.nvim_list_tabpages()
-	local last_tab = tabs[#tabs]
-
-	vim.cmd("stopinsert")
-	if current_tab == last_tab and GetTmuxWindowCount() > 1 then
-		vim.cmd("TmuxSelectNextWindow")
-	else
-		vim.cmd("tabnext")
-	end
-end
-
--- Function to switch tabs backward
-function SwitchTabsBackward()
-	local current_tab = vim.api.nvim_get_current_tabpage()
-
-	vim.cmd("stopinsert")
-	if current_tab == 1 and GetTmuxWindowCount() > 1 then
-		vim.cmd("TmuxSelectPreviousWindow")
-	else
-		vim.cmd("tabprevious")
-	end
-end
-
 -- Quickfix list mappings
 vim.cmd([[packadd cfilter]])
 vim.keymap.set("n", "<leader>j", "<cmd>cnext<cr>zz")
@@ -302,21 +262,6 @@ vim.opt.rtp:prepend(lazypath)
 --
 -- NOTE: Here is where you install your plugins.
 require("lazy").setup({
-	{
-		"m4xshen/hardtime.nvim",
-		dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
-		opts = {
-			disabled_filetypes = { "lazy", "mason", "oil", "qf", "NeogitStatus", "NeogitCommitView" },
-			disable_mouse = false,
-			max_count = 4,
-			disabled_keys = {
-				["<Left>"] = {},
-				["<Right>"] = {},
-				["<Up>"] = {},
-				["<Down>"] = {},
-			},
-		},
-	},
 	-- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
 	"tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
 
@@ -356,7 +301,7 @@ require("lazy").setup({
 				palette = {
 					-- Override the builtin palette per variant
 					main = {
-					    base = '#000000',
+						base = "#000000",
 					},
 				},
 			})
@@ -718,16 +663,6 @@ require("lazy").setup({
 			vim.keymap.set("n", "<leader>sn", function()
 				builtin.find_files({ cwd = vim.fn.stdpath("config") })
 			end, { desc = "[S]earch [N]eovim files" })
-		end,
-	},
-
-	-- For smooth scrolling
-	{
-		"karb94/neoscroll.nvim",
-		config = function()
-			require("neoscroll").setup({
-				mappings = { "<C-d>", "<C-u>" },
-			})
 		end,
 	},
 
@@ -1207,17 +1142,24 @@ require("lazy").setup({
 		dir = vim.fn.stdpath("config") .. "/lua/wezterm/plugins",
 		name = "my wezterm",
 		config = function()
-			require("wezterm.plugins.init").setup()
-			vim.keymap.set("n", "<C-Tab>", "<cmd>lua SwitchTabsForward()<CR>", { noremap = true, silent = true })
-			vim.keymap.set("n", "<C-S-Tab>", "<cmd>lua SwitchTabsBackward()<CR>", { noremap = true, silent = true })
-			vim.keymap.set("i", "<C-Tab>", "<esc><cmd>lua SwitchTabsForward()<CR>", { noremap = true, silent = true })
-			vim.keymap.set(
-				"i",
-				"<C-S-Tab>",
-				"<esc><cmd>lua SwitchTabsBackward()<CR>",
-				{ noremap = true, silent = true }
-			)
-			vim.keymap.set("n", "<C-t>", "<cmd>TmuxSelectNonNvimWindow<CR>", { noremap = true, silent = true })
+			local wezterm = require("wezterm.plugins.init")
+      wezterm.setup()
+			vim.keymap.set("n", "<C-Tab>", function()
+        print("test C-Tab")
+				wezterm.switch_tabs_forward()
+			end, { noremap = true, silent = true })
+			vim.keymap.set("n", "<C-S-Tab>", function()
+				wezterm.switch_tabs_backward()
+			end, { noremap = true, silent = true })
+			vim.keymap.set("i", "<C-Tab>", function()
+				wezterm.switch_tabs_forward()
+			end, { noremap = true, silent = true })
+			vim.keymap.set("i", "<C-S-Tab>", function()
+				wezterm.switch_tabs_backward()
+			end, { noremap = true, silent = true })
+			vim.keymap.set("n", "<C-t>", function()
+				wezterm.tmux_select_non_vim_windows()
+			end, { noremap = true, silent = true })
 		end,
 	},
 	{
