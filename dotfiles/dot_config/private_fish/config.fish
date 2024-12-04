@@ -9,3 +9,6 @@ set -gx EDITOR nvim
 bind --erase \cN
 bind --mode insert \cN 'nvim .'
 bind --mode command \cN 'nvim .'
+
+
+bind --mode insert :q exit
