@@ -1,26 +1,41 @@
 -- Pull in the wezterm API
 local wezterm = require 'wezterm'
+local act = wezterm.action
 
 -- This will hold the configuration.
 local config = wezterm.config_builder()
 
--- This is where you actually apply your config choices
--- config.default_prog = { 'pwsh.exe', '-NoLogo' }
-config.default_prog = { 'wsl.exe', '-d', 'Ubuntu-24.04', '--cd', '~' }
-
 -- For example, changing the color scheme:
 config.window_decorations = "INTEGRATED_BUTTONS|RESIZE"
-config.hide_tab_bar_if_only_one_tab = true
+config.window_close_confirmation = 'NeverPrompt'
+
+config.keys = {
+  {
+    key = 'w', mods = 'CTRL', action = wezterm.action.CloseCurrentTab { confirm = false }
+  },
+  { key = 't', mods = 'CTRL', action = act.SpawnTab 'DefaultDomain' },
+}
+config.skip_close_confirmation_for_processes_named = {
+  'bash',
+  'sh',
+  'wsl',
+  'zsh',
+  'fish',
+  'tmux',
+  'nu',
+  'cmd.exe',
+  'pwsh.exe',
+  'powershell.exe',
+}
 
 config.window_background_opacity = 1
--- config.window_background_opacity = 0
--- config.win32_system_backdrop = 'Tabbed'
--- config.front_end = "OpenGL" -- needed for backdrop
 
 config.initial_rows = 40
 config.initial_cols = 140
 
-config.default_domain = 'WSL:Ubuntu'
+
+local def_dom = 'WSL:Ubuntu-24.04'
+config.default_domain = def_dom
 
 -- and finally, return the configuration to wezterm
 return config

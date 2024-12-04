@@ -5,14 +5,16 @@
      - fonts_dir: "{{ ansible_env.HOME }}/.local/share/fonts"
      - go_version: 1.23.3
      - nvm_version: 0.40.0
-  become: true
-
+  become_method: sudo
+  become_user: root
   tasks:
     - name: Update the apt package index
+      become: true
       apt:
         update_cache: yes
 
     - name: Update or upgrade packages
+      become: true
       apt:
         name: "{{ item }}"
         state: latest  # Ensure the latest version is installed
@@ -27,7 +29,41 @@
         - unzip
         - gh
 
+    - name: Install Fish
+      block:
+        - name: Add Fish PPA repository
+          become: true
+          apt_repository:
+            repo: ppa:fish-shell/release-3
+            state: present
+
+        - name: Update apt cache
+          become: true
+          apt:
+            update_cache: yes
+
+        - name: Install Fish shell
+          become: true
+          apt:
+            name: fish
+            state: present
+
+        - name: Ensure Fish shell is in /etc/shells
+          become: true
+          lineinfile:
+            path: /etc/shells
+            line: /usr/bin/fish
+            state: present
+
+        # should do the same as chsh -s /usr/bin/fish <username>
+        - name: Set Fish as the default shell for the current user
+          become: true
+          user:
+            name: "{{ ansible_facts['user_id'] }}"
+            shell: /usr/bin/fish
+
     - name: Install Neovim
+      become: true
       block:
         - name: Download Neovim tarball
           get_url:
@@ -57,6 +93,7 @@
     # Install Docker
 
     - name: Install Docker
+      become: true
       block:
         - name: Add an Apt signing key, uses whichever key is at the URL
           ansible.builtin.apt_key:
@@ -87,6 +124,7 @@
       register: go_installed
 
     - name: Install Go
+      become: true
       block:
         - name: Download Go tar file
           command: wget https://go.dev/dl/go{{go_version}}.linux-amd64.tar.gz
@@ -119,6 +157,7 @@
       register: nvm_path
 
     - name: Setup NodeVersionManager and install node version
+      become: true
       block:
         - name: Install nvm
           shell: >
@@ -137,6 +176,7 @@
       when: nvm_path.stat.exists  == false 
 
     - name: Installing node versions using loop
+      become: true
       shell: >
         source $HOME/.nvm/nvm.sh && nvm install {{item}}
       args:
@@ -147,37 +187,39 @@
         - 16
         # - 14.18.3
 
-    - name: Install Fira Code Nerd Font
-      block:
-        - name: Ensure fonts directory exists
-          file:
-            path: "{{ fonts_dir }}"
-            state: directory
-            mode: '0755'
-
-        - name: Download Fira Code Nerd Font
-          get_url:
-            url: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/FiraCode.zip
-            dest: /tmp/FiraCode.zip
-            mode: '0644'
-          register: download_result
-
-        - name: Unzip the font archive
-          unarchive:
-            src: /tmp/FiraCode.zip
-            dest: "{{ fonts_dir }}"
-            remote_src: yes
-          when: download_result.changed
-
-        - name: Update font cache
-          command: fc-cache -fv
-          when: download_result.changed
-          notify: Font cache updated
-
-      vars:
-        fonts_dir: "{{ ansible_env.HOME }}/.local/share/fonts"
+    # - name: Install Fira Code Nerd Font
+    #   become: true
+    #   block:
+    #     - name: Ensure fonts directory exists
+    #       file:
+    #         path: "{{ fonts_dir }}"
+    #         state: directory
+    #         mode: '0755'
+    #
+    #     - name: Download Fira Code Nerd Font
+    #       get_url:
+    #         url: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/FiraCode.zip
+    #         dest: /tmp/FiraCode.zip
+    #         mode: '0644'
+    #       register: download_result
+    #
+    #     - name: Unzip the font archive
+    #       unarchive:
+    #         src: /tmp/FiraCode.zip
+    #         dest: "{{ fonts_dir }}"
+    #         remote_src: yes
+    #       when: download_result.changed
+    #
+    #     - name: Update font cache
+    #       command: fc-cache -fv
+    #       when: download_result.changed
+    #       notify: Font cache updated
+    #
+    #   vars:
+    #     fonts_dir: "{{ ansible_env.HOME }}/.local/share/fonts"
 
     - name: Install Starship Prompt
+      become: true
       block:
         - name: Check if Starship is already installed
           stat:

@@ -82,10 +82,10 @@ properties:
           $ansibleInstalled = wsl bash -c "command -v ansible"
           return -not [string]::IsNullOrWhiteSpace($ansibleInstalled)
         SetScript: |
-          wsl bash -c "sudo apt update -y > /tmp/apt_update.log 2>&1 && \
-          sudo apt install -y software-properties-common > /tmp/apt_update.log 2>&1 && \
-          sudo add-apt-repository --yes --update ppa:ansible/ansible > /tmp/apt_update.log 2>&1 && \
-          sudo apt install -y ansible > /tmp/apt_update.log 2>&1 &&
+          wsl -u root bash -c "apt update -y > /tmp/apt_update.log 2>&1 && \
+          apt install -y software-properties-common > /tmp/apt_update.log 2>&1 && \
+          add-apt-repository --yes --update ppa:ansible/ansible > /tmp/apt_update.log 2>&1 && \
+          apt install -y ansible > /tmp/apt_update.log 2>&1 &&
           ansible --version
           "
 
@@ -112,4 +112,4 @@ properties:
           return -not [string]::IsNullOrWhiteSpace($chezmoiInstalled)
         SetScript: |
           # Install chezmoi in WSL if not installed
-          wsl bash -c "cd $(( $env:USERPROFILE -replace '\\', '/' -replace 'C:/', '/mnt/c/' ) + '/.local/share/chezmoi/ansible') && ansible-playbook -i localhost, --connection=local -e ansible_python_interpreter=/usr/bin/python3 chezmoi-install.yaml > /tmp/ansible.log 2>&1"
+          wsl -u root bash -c "cd $(( $env:USERPROFILE -replace '\\', '/' -replace 'C:/', '/mnt/c/' ) + '/.local/share/chezmoi/ansible') && ansible-playbook -i localhost, --connection=local -e ansible_python_interpreter=/usr/bin/python3 chezmoi-install.yaml > /tmp/ansible.log 2>&1"

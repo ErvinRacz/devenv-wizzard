@@ -12,7 +12,7 @@ DOTFILE_REPO_URL = "https://github.com/ErvinRacz/devenv-wizzard.git" ; chezmoi -
 Update on WSL Ubuntu with andsible:
 
 ```shell
-wsl bash -c "cd $(( $env:USERPROFILE -replace '\\', '/' -replace 'C:/', '/mnt/c/' ) + '/.local/share/chezmoi/ansible') && ansible-playbook -i localhost, --connection=local ubuntu-installs.yaml"
+wsl bash -c "cd $(( $env:USERPROFILE -replace '\\', '/' -replace 'C:/', '/mnt/c/' ) + '/.local/share/chezmoi/ansible') && ansible-playbook -K -i localhost, --connection=local ubuntu-installs.yaml"
 ```
 
 
