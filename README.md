@@ -15,6 +15,9 @@ Update on WSL Ubuntu with andsible:
 wsl bash -c "cd $(( $env:USERPROFILE -replace '\\', '/' -replace 'C:/', '/mnt/c/' ) + '/.local/share/chezmoi/ansible') && ansible-playbook -K -i localhost, --connection=local ubuntu-installs.yaml"
 ```
 
+add git hooks:
+
+`ln -s ~/.git-global-hooks/commit-msg $(pwd)/.git/hooks/commit-msg`
 
 ## 2. Install Edge Extensions:
 - https://github.com/gdh1995/vimium-c

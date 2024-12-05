@@ -1,0 +1,29 @@
+#!/bin/bash
+
+COMMIT_MSG_FILE="$1"
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+HEADER_REGEX="^[a-zA-Z0-9_-]+: .+"
+BODY_REGEX="^$"
+FOOTER_REGEX="^(Fixes|Closes|Refs|See) #[0-9]+$"
+
+HEADER=$(echo "$COMMIT_MSG" | head -n 1)
+BODY=$(echo "$COMMIT_MSG" | sed -n '3p')
+FOOTER=$(echo "$COMMIT_MSG" | tail -n 1)
+
+if ! [[ "$HEADER" =~ $HEADER_REGEX ]]; then
+    echo "Error: Commit message header must follow this format:"
+    echo "<module or file name>: <what changed>"
+    exit 1
+fi
+
+if ! [[ "$BODY" =~ $BODY_REGEX ]]; then
+    echo "Error: Commit message must have a blank line after the header."
+    exit 1
+fi
+
+if [[ -n "$FOOTER" ]] && ! [[ "$FOOTER" =~ $FOOTER_REGEX ]]; then
+    echo "Error: Footer (if present) must follow this format:"
+    echo "[Fixes|Closes|Refs|See] #<issue_number>"
+    exit 1
+fi

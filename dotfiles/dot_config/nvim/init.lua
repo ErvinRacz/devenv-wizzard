@@ -962,6 +962,7 @@ require("lazy").setup({
 			local luasnip = require("luasnip")
 			luasnip.config.setup({})
 
+      require("git_snippets")
 			cmp.setup({
 				snippet = {
 					expand = function(args)
