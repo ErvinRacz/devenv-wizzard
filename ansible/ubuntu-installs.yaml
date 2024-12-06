@@ -1,20 +1,24 @@
 ---
 - name: Install packages on Ubuntu
   hosts: localhost
+  become: true
   vars:
      - fonts_dir: "{{ ansible_env.HOME }}/.local/share/fonts"
      - go_version: 1.23.3
-     - nvm_version: 0.40.0
-  become_method: sudo
-  become_user: root
+     - asdf_version: 0.14.1
+     - target_home: "{{ lookup('env', 'HOME') }}"
+  environment:
+    HOME: "{{ target_home }}"
   tasks:
+    - name: Debug the user and home directory
+      ansible.builtin.debug:
+        msg: "Home is: {{ target_home }}"
+
     - name: Update the apt package index
-      become: true
       apt:
         update_cache: yes
 
     - name: Update or upgrade packages
-      become: true
       apt:
         name: "{{ item }}"
         state: latest  # Ensure the latest version is installed
@@ -32,24 +36,20 @@
     - name: Install Fish
       block:
         - name: Add Fish PPA repository
-          become: true
           apt_repository:
             repo: ppa:fish-shell/release-3
             state: present
 
         - name: Update apt cache
-          become: true
           apt:
             update_cache: yes
 
         - name: Install Fish shell
-          become: true
           apt:
             name: fish
             state: present
 
         - name: Ensure Fish shell is in /etc/shells
-          become: true
           lineinfile:
             path: /etc/shells
             line: /usr/bin/fish
@@ -57,13 +57,11 @@
 
         # should do the same as chsh -s /usr/bin/fish <username>
         - name: Set Fish as the default shell for the current user
-          become: true
           user:
             name: "{{ ansible_facts['user_id'] }}"
             shell: /usr/bin/fish
 
     - name: Install Neovim
-      become: true
       block:
         - name: Download Neovim tarball
           get_url:
@@ -93,7 +91,6 @@
     # Install Docker
 
     - name: Install Docker
-      become: true
       block:
         - name: Add an Apt signing key, uses whichever key is at the URL
           ansible.builtin.apt_key:
@@ -124,7 +121,6 @@
       register: go_installed
 
     - name: Install Go
-      become: true
       block:
         - name: Download Go tar file
           command: wget https://go.dev/dl/go{{go_version}}.linux-amd64.tar.gz
@@ -142,7 +138,7 @@
           lineinfile:
             path: ~/.profile
             line: |
-              export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
+              export PATH=$PATH:/usr/local/go/bin
               # export XDG_CONFIG_HOME="~/.config"
             create: true
             state: present
@@ -156,39 +152,47 @@
         path: "$HOME/.nvm"
       register: nvm_path
 
-    - name: Setup NodeVersionManager and install node version
-      become: true
+    - name: Setup ASDF and install node version
       block:
-        - name: Install nvm
+        - name: Clone ASDF repository
           shell: >
-            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v{{nvm_version}}/install.sh | bash 
+            git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v{{ asdf_version }}
           args:
-            executable: /bin/bash
             chdir: "$HOME"
-            creates: "$HOME/.nvm/nvm.sh"
+            creates: "$HOME/.asdf"
 
-        - name: Setup .profile of yournonrootuser
-          lineinfile:
-            path: ~/.profile
-            # This will make sure Node is on the users PATH
-            line: source ~/.nvm/nvm.sh 
-            create: yes
-      when: nvm_path.stat.exists  == false 
+        - name: Verify ASDF directory exists
+          stat:
+            path: "$HOME/.asdf"
+          register: asdf_dir
 
-    - name: Installing node versions using loop
-      become: true
+        - name: Debug output
+          debug:
+            msg: "ASDF directory status: {{ asdf_dir }}"
+
+        - name: Configure ASDF completions for Fish
+          shell: >
+            mkdir -p ~/.config/fish/completions && ln -s ~/.asdf/completions/asdf.fish ~/.config/fish/completions
+          args:
+            chdir: "$HOME"
+            creates: "$HOME/.config/fish/completions/asdf.fish"
+
+        - name: Install ASDF Node.js plugin
+          shell: >
+            fish -c "source ~/.asdf/asdf.fish && asdf plugin add nodejs || true"
+          args:
+            chdir: "$HOME"
+
+    - name: Install Node.js versions using ASDF
       shell: >
-        source $HOME/.nvm/nvm.sh && nvm install {{item}}
+        fish -c "asdf install nodejs {{ item }} --latest && asdf global nodejs {{ item }}"
       args:
-        executable: /bin/bash
         chdir: "$HOME"
-        creates: "$HOME/.nvm/versions/node/v{{item}}"
+        creates: "$HOME/.asdf/installs/nodejs/{{ item }}"
       loop:
-        - 16
-        # - 14.18.3
+        - 16.20.0
 
     # - name: Install Fira Code Nerd Font
-    #   become: true
     #   block:
     #     - name: Ensure fonts directory exists
     #       file:
@@ -219,7 +223,6 @@
     #     fonts_dir: "{{ ansible_env.HOME }}/.local/share/fonts"
 
     - name: Install Starship Prompt
-      become: true
       block:
         - name: Check if Starship is already installed
           stat:

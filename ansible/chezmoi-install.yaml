@@ -1,7 +1,6 @@
 ---
 - name: Install chezmoi from GitHub releases
   hosts: localhost
-  become: true
 
   tasks:
     - name: Set the download URL for chezmoi based on OS and architecture
