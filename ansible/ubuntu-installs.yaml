@@ -191,6 +191,7 @@
         creates: "$HOME/.asdf/installs/nodejs/{{ item }}"
       loop:
         - 16.20.0
+        - 22.12.0
 
     # - name: Install Fira Code Nerd Font
     #   block:

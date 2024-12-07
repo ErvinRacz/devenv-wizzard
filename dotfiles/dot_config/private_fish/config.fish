@@ -16,6 +16,13 @@ bind --mode insert \cN 'nvim .'
 bind --mode command \cN 'nvim .'
 
 
+
+bind --mode insert -m insert \co 'prevd; commandline -f repaint'
+bind --mode command -m insert \co 'prevd; commandline -f repaint'
+bind --mode insert -m insert \ci 'nextd; commandline -f repaint'
+bind --mode command -m insert \ci 'nextd; commandline -f repaint'
+
+
 bind --mode insert :q exit
 
 bind yy fish_clipboard_copy
