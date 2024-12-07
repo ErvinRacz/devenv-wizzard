@@ -15,13 +15,12 @@ bind --erase \cN
 bind --mode insert \cN 'nvim .'
 bind --mode command \cN 'nvim .'
 
-
+bind -M insert \t complete-and-search
 
 bind --mode insert -m insert \co 'prevd; commandline -f repaint'
 bind --mode command -m insert \co 'prevd; commandline -f repaint'
 bind --mode insert -m insert \ci 'nextd; commandline -f repaint'
 bind --mode command -m insert \ci 'nextd; commandline -f repaint'
-
 
 bind --mode insert :q exit
 
