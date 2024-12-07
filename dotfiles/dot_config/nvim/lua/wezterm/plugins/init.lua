@@ -72,5 +72,26 @@ function M.switch_tabs_backward()
 	end
 end
 
+function M.tmux_select_non_vim_windows()
+	vim.cmd("stopinsert")
+	local wezterm_cli = "wezterm.exe cli list --format json"
+
+	-- Execute the wezterm CLI to fetch the tabs list
+	local handle = io.popen(wezterm_cli)
+	if not handle then
+		print("Error: Unable to execute wezterm CLI")
+		return
+	end
+	local output = handle:read("*a")
+	handle:close()
+
+	local wezterm_tabs = vim.fn.json_decode(output)
+
+	if #wezterm_tabs <= 1 then
+		vim.fn.system("wezterm.exe cli spawn")
+	else
+		vim.fn.system("wezterm.exe cli activate-tab --tab-relative 1")
+	end
+end
 
 return M
