@@ -448,7 +448,9 @@ require("lazy").setup({
 		-- open neogit or jump to the window where it is alraedy opened
 		config = function()
 			local neogit = require("neogit")
-			neogit.setup({})
+			neogit.setup({
+        integrations = { diffview = true }
+      })
 			vim.keymap.set("n", "<C-g>", function()
 				local buf_info_list = vim.fn.getbufinfo()
 
