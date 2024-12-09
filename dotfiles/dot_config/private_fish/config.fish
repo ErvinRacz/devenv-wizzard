@@ -7,6 +7,7 @@ starship init fish | source
 set -a PATH /opt/nvim-linux64/bin
 set -a PATH /usr/local/go/bin
 set -a PATH ~/go/bin
+set -a PATH ~/bin
 
 source ~/.asdf/asdf.fish
 set -gx EDITOR nvim
