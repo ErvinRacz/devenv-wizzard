@@ -60,6 +60,11 @@ wezterm.on("new-tab", function(window, pane)
 end)
 
 config.keys = {
+	{
+		key = "Enter",
+		mods = "ALT",
+		action = wezterm.action.DisableDefaultAssignment,
+	},
 	{ key = "t", mods = "CTRL", action = wezterm.action({ EmitEvent = "new-tab" }) },
 	{ key = "Tab", mods = "CTRL", action = wezterm.action({ EmitEvent = "move-tab-forward" }) },
 	{ key = "Tab", mods = "CTRL|SHIFT", action = wezterm.action({ EmitEvent = "move-tab-backward" }) },
