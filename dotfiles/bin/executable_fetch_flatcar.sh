@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Prompt for the channel with predefined options (using Gum's choose)
-channel=$(gum choose "stable" "beta" "alpha" "lts" "custom" --placeholder "Select channel")
+channel=$(gum choose "stable" "beta" "alpha" "lts" "custom")
 
 # If custom channel is selected, prompt the user to enter a custom value
 if [[ "$channel" == "custom" ]]; then
@@ -12,7 +12,7 @@ fi
 version=$(gum input --placeholder "Enter version (default: current)" --value "current")
 
 # Prompt for the architecture (choose between aarch64 or x86_64)
-machine=$(gum choose "aarch64" "x86_64" --placeholder "Select machine architecture")
+machine=$(gum choose "aarch64" "x86_64")
 
 # Initialize architecture variable
 arch=""

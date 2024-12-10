@@ -827,10 +827,7 @@ require("lazy").setup({
 				--
 				-- But for many setups, the LSP (`tsserver`) will work just fine
 				-- TODO: renamed to something else like ts_ls if I'm not mistaken
-				-- tsserver = {
-				--   root_dir = lspconfig_util.root_pattern("package.json"),
-				--   single_file_support = false
-				-- },
+				tsserver = {},
 				-- denols = {
 				--   root_dir = lspconfig_util.root_pattern("deno.json", "deno,jsonc"),
 				-- },
