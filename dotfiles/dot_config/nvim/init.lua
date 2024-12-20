@@ -308,22 +308,34 @@ require("lazy").setup({
 			vim.cmd("colorscheme rose-pine")
 		end,
 	},
-
-	-- {
-	--   'github/copilot.vim',
-	--   init = function()
-	--     vim.g.copilot_no_tab_map = true
-	--   end,
-	--   config = function()
-	--     vim.keymap.set(
-	--       'i',
-	--       '<C-q>',
-	--       'copilot#Accept("<Tab>")',
-	--       { desc = '[A]ccept Copilot Suggestion', silent = true, expr = true, script = true, replace_keycodes = false }
-	--     )
-	--     -- Use the :Copilot panel command to ask for specific suggestions
-	--   end,
-	-- },
+	{
+		"olimorris/codecompanion.nvim",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-treesitter/nvim-treesitter",
+		},
+		config = function()
+			require("codecompanion").setup({
+				strategies = {
+					chat = {
+						adapter = "openai",
+					},
+					inline = {
+						adapter = "openai",
+					},
+				},
+				adapters = {
+					openai = function()
+						return require("codecompanion.adapters").extend("openai", {
+							env = {
+								api_key = "cmd:op read op://personal/OpenAI/credential --no-newline",
+							},
+						})
+					end,
+				},
+			})
+		end,
+	},
 	{
 		"stevearc/oil.nvim",
 		opts = {
@@ -449,8 +461,8 @@ require("lazy").setup({
 		config = function()
 			local neogit = require("neogit")
 			neogit.setup({
-        integrations = { diffview = true }
-      })
+				integrations = { diffview = true },
+			})
 			vim.keymap.set("n", "<C-g>", function()
 				local buf_info_list = vim.fn.getbufinfo()
 
@@ -817,7 +829,7 @@ require("lazy").setup({
 			--        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
 			local servers = {
 				-- clangd = {},
-				-- gopls = {},
+				gopls = {},
 				-- pyright = {},
 				-- rust_analyzer = {},
 				-- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -914,7 +926,7 @@ require("lazy").setup({
 				--
 				-- You can use a sub-list to tell conform to run *until* a formatter
 				-- is found.
-				-- javascript = { { 'prettierd' } },
+				javascript = { { "prettierd" } },
 			},
 		},
 	},
@@ -961,7 +973,7 @@ require("lazy").setup({
 			local luasnip = require("luasnip")
 			luasnip.config.setup({})
 
-      require("git_snippets")
+			require("git_snippets")
 			cmp.setup({
 				snippet = {
 					expand = function(args)
@@ -1143,9 +1155,9 @@ require("lazy").setup({
 		name = "my wezterm",
 		config = function()
 			local wezterm = require("wezterm.plugins.init")
-      wezterm.setup()
+			wezterm.setup()
 			vim.keymap.set("n", "<C-Tab>", function()
-        print("test C-Tab")
+				print("test C-Tab")
 				wezterm.switch_tabs_forward()
 			end, { noremap = true, silent = true })
 			vim.keymap.set("n", "<C-S-Tab>", function()

@@ -185,7 +185,7 @@
 
     - name: Install Node.js versions using ASDF
       shell: >
-        fish -c "asdf install nodejs {{ item }} --latest && asdf global nodejs {{ item }}"
+        fish -c "asdf install nodejs {{ item }} --latest && asdf global nodejs {{ item }} && npm install -g @fsouza/prettierd"
       args:
         chdir: "$HOME"
         creates: "$HOME/.asdf/installs/nodejs/{{ item }}"
