@@ -27,6 +27,99 @@ function M.set_user_var(key, value)
 	io.write(string.format("\027]1337;SetUserVar=%s=%s\a", key, M.base64(value)))
 end
 
+-- Helper function for switching tabs forward
+local function switch_forward(system_command)
+	local current_tab = vim.api.nvim_get_current_tabpage()
+	local tabs = vim.api.nvim_list_tabpages()
+	local last_tab = tabs[#tabs]
+
+	vim.cmd("stopinsert")
+	if current_tab == last_tab then
+		vim.fn.system(system_command)
+	else
+		vim.cmd("tabnext")
+	end
+end
+
+-- Helper function for switching tabs backward
+local function switch_backward(fallback_command)
+	local current_tab = vim.api.nvim_get_current_tabpage()
+
+	vim.cmd("stopinsert")
+	if current_tab == 1 then
+		vim.fn.system(fallback_command)
+	else
+		vim.cmd("tabprevious")
+	end
+end
+
+-- Strategies for different environments
+local strategies = {
+	wezterm = {
+		switch_tabs_forward = function()
+			switch_forward("wezterm cli activate-tab --no-wrap --tab-relative 1")
+		end,
+		switch_tabs_backward = function()
+			switch_backward("wezterm cli activate-tab --no-wrap --tab-relative -1")
+		end,
+		select_non_vim_windows = function()
+			vim.cmd("stopinsert")
+			local wezterm_cli = "wezterm cli list --format json"
+			local handle = io.popen(wezterm_cli)
+			if not handle then
+				print("Error: Unable to execute wezterm CLI")
+				return
+			end
+			local output = handle:read("*a")
+			handle:close()
+
+			local wezterm_tabs = vim.fn.json_decode(output)
+			if #wezterm_tabs <= 1 then
+				vim.fn.system("wezterm cli spawn")
+			else
+				vim.fn.system("wezterm cli activate-tab --tab-relative 1")
+			end
+		end,
+	},
+	tmux = {
+		switch_tabs_forward = function()
+			switch_forward("tmux next-window")
+		end,
+		switch_tabs_backward = function()
+			switch_backward("tmux previous-window")
+		end,
+		select_non_vim_windows = function()
+			vim.cmd("stopinsert")
+			vim.fn.system("tmux select-window -t :.+")
+		end,
+	},
+}
+
+-- Detect environment and return the appropriate strategy
+local function detect_environment()
+	if vim.fn.exists("$TMUX") == 1 then
+		return "tmux"
+	elseif vim.fn.exists("$WEZTERM") == 1 then
+		return "wezterm"
+	else
+		return "default"
+	end
+end
+
+-- Default strategy for unsupported environments
+strategies.default = {
+	switch_tabs_forward = function()
+		vim.cmd("tabnext")
+	end,
+	switch_tabs_backward = function()
+		vim.cmd("tabprevious")
+	end,
+	select_non_vim_windows = function()
+		print("Non-Vim window selection not supported in this environment.")
+	end,
+}
+
+-- Main setup function
 function M.setup()
 	M.set_user_var("NVIM_PRESENT", true)
 	-- Register autocommands for Neovim activity
@@ -35,63 +128,27 @@ function M.setup()
 			M.set_user_var("NVIM_PRESENT", true)
 		end,
 	})
-
 	vim.api.nvim_create_autocmd({ "FocusLost", "VimLeave" }, {
 		callback = function()
 			M.set_user_var("NVIM_PRESENT", false)
 		end,
 	})
+
+	local environment = detect_environment()
+	M.strategy = strategies[environment]
 end
 
--- Function to switch tabs forward
+-- Expose the switching functions
 function M.switch_tabs_forward()
-	local current_tab = vim.api.nvim_get_current_tabpage()
-
-	local tabs = vim.api.nvim_list_tabpages()
-	local last_tab = tabs[#tabs]
-
-	print("current_tab", current_tab)
-	print("last_tab", last_tab)
-	vim.cmd("stopinsert")
-	if current_tab == last_tab then
-		vim.fn.system("wezterm.exe cli activate-tab --no-wrap --tab-relative 1")
-	else
-		vim.cmd("tabnext")
-	end
+	M.strategy.switch_tabs_forward()
 end
 
--- Function to switch tabs backward
 function M.switch_tabs_backward()
-	local current_tab = vim.api.nvim_get_current_tabpage()
-
-	vim.cmd("stopinsert")
-	if current_tab == 1  then
-		vim.fn.system("wezterm.exe cli activate-tab --no-wrap --tab-relative -1")
-	else
-		vim.cmd("tabprevious")
-	end
+	M.strategy.switch_tabs_backward()
 end
 
-function M.tmux_select_non_vim_windows()
-	vim.cmd("stopinsert")
-	local wezterm_cli = "wezterm.exe cli list --format json"
-
-	-- Execute the wezterm CLI to fetch the tabs list
-	local handle = io.popen(wezterm_cli)
-	if not handle then
-		print("Error: Unable to execute wezterm CLI")
-		return
-	end
-	local output = handle:read("*a")
-	handle:close()
-
-	local wezterm_tabs = vim.fn.json_decode(output)
-
-	if #wezterm_tabs <= 1 then
-		vim.fn.system("wezterm.exe cli spawn")
-	else
-		vim.fn.system("wezterm.exe cli activate-tab --tab-relative 1")
-	end
+function M.select_non_vim_windows()
+	M.strategy.select_non_vim_windows()
 end
 
 return M
