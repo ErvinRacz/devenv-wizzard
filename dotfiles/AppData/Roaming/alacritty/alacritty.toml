@@ -1,3 +1,33 @@
-[shell]
-program = "C:\\WINDWOS\\system32\\wsl.exe"
-args = ["-d", "Ubuntu-24.04"]
+[env]
+TERM = "xterm-256color"
+
+[terminal.shell]
+program = "wsl"
+args = ["-d", "Ubuntu-24.04", "--cd", "~"]
+
+[font]
+normal = { family = "JetBrainsMono Nerd Font Mono" }
+
+[window]
+opacity = 0.88
+padding = { x = 0, y = 0 }
+dynamic_padding = true
+startup_mode = "Maximized"
+
+[colors.primary]
+background = "#000000"
+
+# Use the command `showkey -a` for debugging
+
+[keyboard]
+bindings = [
+{ key = "A", mode = "Vi|~Search", action = "ToggleViMode" },
+{ key = "O", mode = "Vi|~Search", action = "ToggleViMode" },
+{ key = "Slash", mods = "Control", chars = "\u001f" },
+{ key = "Return", mods = "Alt", action = "ReceiveChar"},
+{ key = "T", mods = "Control", action = "ReceiveChar"},
+{ key = "T", mods = "Control|Shift", chars = "\u001B[27;6;116~"},
+{ key = "Tab", mods = "Control", chars = "\u001B[27;5;9~"},
+{ key = "Tab", mods = "Control|Shift", chars = "\u001B[27;6;9~"},
+{ key = "Key6", mods = "Control", chars = "\u001e"},
+]
