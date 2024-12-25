@@ -3,12 +3,9 @@
   hosts: localhost
   become: true
   vars:
-     - fonts_dir: "{{ ansible_env.HOME }}/.local/share/fonts"
      - go_version: 1.23.3
      - asdf_version: 0.14.1
-     - zellij_version: 0.41.2
      - target_home: "{{ lookup('env', 'HOME') }}"
-     - tmux_theme_catppuccin_version: 2.1.2
   environment:
     HOME: "{{ target_home }}"
   tasks:
@@ -36,19 +33,18 @@
         - gh
         - tmux
 
-    - name: Set up Catppuccin tmux theme
+    - name: Set up tmux theme
       block:
         - name: Ensure the target directory exists
           file:
-            path: "{{ ansible_env.HOME }}/.config/tmux/plugins/catppuccin"
+            path: "{{ ansible_env.HOME }}/.config/tmux/plugins/rose-pine"
             state: directory
             mode: '0755'
 
         - name: Clone the Catppuccin tmux repository
           git:
-            repo: https://github.com/catppuccin/tmux.git
-            dest: "{{ ansible_env.HOME }}/.config/tmux/plugins/catppuccin/tmux"
-            version: "v{{tmux_theme_catppuccin_version}}"
+            repo: https://github.com/rose-pine/tmux.git
+            dest: "{{ ansible_env.HOME }}/.config/tmux/plugins/rose-pine/tmux"
             force: yes
 
     - name: Install Fish

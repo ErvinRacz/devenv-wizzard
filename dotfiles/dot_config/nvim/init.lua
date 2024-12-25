@@ -298,12 +298,9 @@ require("lazy").setup({
 		name = "rose-pine",
 		config = function()
 			require("rose-pine").setup({
-				palette = {
-					-- Override the builtin palette per variant
-					main = {
-						base = "#000000",
-					},
-				},
+        styles = {
+          transparency = true,
+        },
 			})
 			vim.cmd("colorscheme rose-pine")
 		end,
@@ -417,7 +414,7 @@ require("lazy").setup({
 				end
 				-- Actions
 				map("n", "<leader>hs", gitsigns.stage_hunk, { desc = "Stage the current hunk" })
-				map("n", "<C-a-z>", gitsigns.reset_hunk, { desc = "Reset the current hunk" })
+				map("n", "<A-z>", gitsigns.reset_hunk, { desc = "Reset the current hunk" })
 				map("v", "<leader>hs", function()
 					gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
 				end, { desc = "Stage the selected hunk" })
