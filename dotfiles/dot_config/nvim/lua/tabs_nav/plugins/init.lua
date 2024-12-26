@@ -90,7 +90,51 @@ local strategies = {
 		end,
 		select_non_vim_windows = function()
 			vim.cmd("stopinsert")
-			vim.fn.system("tmux select-window -t :.+")
+
+			-- Get the list of tmux windows and their details
+			local handle = io.popen("tmux list-windows -F '#I #{window_active} #{pane_current_command}'")
+			if not handle then
+				print("Error: Unable to list tmux windows")
+				return
+			end
+
+			local output = handle:read("*a")
+			handle:close()
+
+			-- Parse the list of windows
+			local windows = {}
+			for line in output:gmatch("[^\r\n]+") do
+				local index, is_active, command = line:match("^(%d+)%s+(%d+)%s+(.+)$")
+				if index then
+					table.insert(windows, {
+						index = index,
+						is_active = (is_active == "1"),
+						command = command,
+					})
+				end
+			end
+
+			-- If only one window exists, create a new one
+			if #windows <= 1 then
+				vim.fn.system("tmux new-window")
+				return
+			end
+
+			-- Find the rightmost window that is not running Neovim and is not active
+			local target_window = nil
+			for i = #windows, 1, -1 do
+				if windows[i].command ~= "nvim" and not windows[i].is_active then
+					target_window = windows[i]
+					break
+				end
+			end
+
+			if target_window then
+				vim.fn.system("tmux select-window -t " .. target_window.index)
+			else
+				-- If all non-Neovim windows are active or there's only Neovim windows, create a new one
+				vim.fn.system("tmux new-window")
+			end
 		end,
 	},
 }

@@ -1042,10 +1042,10 @@ require("lazy").setup({
 		end,
 	},
 	{
-		dir = vim.fn.stdpath("config") .. "/lua/wezterm/plugins",
+		dir = vim.fn.stdpath("config") .. "/lua/tabs_nav/plugins",
 		name = "my wezterm",
 		config = function()
-			local wezterm = require("wezterm.plugins.init")
+			local wezterm = require("tabs_nav.plugins.init")
 			wezterm.setup()
 			vim.keymap.set("n", "<C-Tab>", function()
 				print("test C-Tab")
