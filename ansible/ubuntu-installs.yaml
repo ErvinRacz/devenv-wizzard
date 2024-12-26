@@ -33,6 +33,7 @@
         - gh
         - tmux
         - fzf
+        - luarocks
 
     - name: Set up tmux theme
       block:
