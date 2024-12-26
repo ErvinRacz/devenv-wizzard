@@ -59,7 +59,7 @@ vim.g.have_nerd_font = true
 --  For more options, you can see `:help option-list`
 vim.opt.number = true
 vim.opt.relativenumber = true
-vim.opt.fillchars = {eob = " "} -- to remove '~' from the end of buffers
+vim.opt.fillchars = { eob = " " } -- to remove '~' from the end of buffers
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = "a"
 -- Don't show the mode, since it's already in the status line
@@ -290,9 +290,9 @@ require("lazy").setup({
 		name = "rose-pine",
 		config = function()
 			require("rose-pine").setup({
-        styles = {
-          transparency = true,
-        },
+				styles = {
+					transparency = true,
+				},
 			})
 			vim.cmd("colorscheme rose-pine")
 		end,
@@ -676,7 +676,7 @@ require("lazy").setup({
 			"williamboman/mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
-      "saghen/blink.cmp",
+			"saghen/blink.cmp",
 
 			-- Useful status updates for LSP.
 			-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
@@ -804,7 +804,7 @@ require("lazy").setup({
 			--  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
 			--  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
-			capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)
+			capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
 
 			local lspconfig_util = require("lspconfig.util")
 
@@ -940,7 +940,31 @@ require("lazy").setup({
 			-- 'super-tab' for mappings similar to vscode (tab to accept, arrow keys to navigate)
 			-- 'enter' for mappings similar to 'super-tab' but with 'enter' to accept
 			-- See the full "keymap" documentation for information on defining your own keymap.
-			keymap = { preset = "default" },
+			keymap = {
+				preset = "none",
+				["<S-k>"] = { "show_documentation", "hide_documentation" },
+				["<C-e>"] = { "hide" },
+				["<C-space>"] = { "show" },
+
+				["<C-k>"] = { "select_prev", "fallback" },
+				["<C-j>"] = { "select_next", "fallback" },
+
+				["<C-h>"] = { "scroll_documentation_up", "fallback" },
+				["<C-l>"] = { "scroll_documentation_down", "fallback" },
+
+				["<Tab>"] = {
+					function(cmp)
+						if cmp.snippet_active() then
+							return cmp.accept()
+						else
+							return cmp.select_and_accept()
+						end
+					end,
+					"snippet_forward",
+					"fallback",
+				},
+				["<S-Tab>"] = { "snippet_backward", "fallback" },
+			},
 
 			appearance = {
 				-- Sets the fallback highlight groups to nvim-cmp's highlight groups
@@ -949,7 +973,7 @@ require("lazy").setup({
 				use_nvim_cmp_as_default = true,
 				-- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
 				-- Adjusts spacing to ensure icons are aligned
-				nerd_font_variant = "normal",
+				nerd_font_variant = "mono",
 			},
 
 			-- Default list of enabled providers defined so that you can extend it
