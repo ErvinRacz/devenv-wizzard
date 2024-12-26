@@ -32,6 +32,7 @@
         - unzip
         - gh
         - tmux
+        - fzf
 
     - name: Set up tmux theme
       block:
