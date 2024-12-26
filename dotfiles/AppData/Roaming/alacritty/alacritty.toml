@@ -30,4 +30,5 @@ bindings = [
 { key = "Tab", mods = "Control", chars = "\u001B[27;5;9~"},
 { key = "Tab", mods = "Control|Shift", chars = "\u001B[27;6;9~"},
 { key = "Key6", mods = "Control", chars = "\u001e"},
+{ key = "Space", mods = "Control", chars = "\u0000"},
 ]
