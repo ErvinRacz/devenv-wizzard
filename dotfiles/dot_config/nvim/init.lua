@@ -256,9 +256,9 @@ require("lazy").setup({
 		config = function()
 			require("rose-pine").setup({
 				dim_inactive_windows = true,
-				extend_background_behind_borders = false,
+				-- extend_background_behind_borders = false,
 				styles = {
-					-- transparency = true,
+					transparency = true,
 				},
 				palette = {
 					main = {
