@@ -3,7 +3,8 @@ TERM = "xterm-256color"
 
 [terminal.shell]
 program = "wsl"
-args = ["-d", "Ubuntu-24.04", "--", "tmux", "attach", "||", "tmux", "new-session", "-c", "~"]
+args = ["--", "tmux", "attach", "||", "tmux", "new-session", "-c", "~"]
+# args = ["-d", "Ubuntu-24.04", "--", "tmux", "attach", "||", "tmux", "new-session", "-c", "~"]
 
 [font]
 normal = { family = "JetBrainsMono Nerd Font Mono" }
