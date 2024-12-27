@@ -34,6 +34,7 @@
         - tmux
         - fzf
         - luarocks
+        - pass
 
     - name: Set up tmux theme
       block:

@@ -28,7 +28,6 @@ If you experience any errors while trying to install kickstart, run `:checkhealt
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
-
 -- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = true
 
@@ -256,18 +255,28 @@ require("lazy").setup({
 		name = "rose-pine",
 		config = function()
 			require("rose-pine").setup({
+				dim_inactive_windows = true,
+				extend_background_behind_borders = false,
 				styles = {
-					transparency = true,
+					-- transparency = true,
+				},
+				palette = {
+					main = {
+						base = "#000000",
+						-- _nc = "#000000",
+					},
 				},
 			})
 			vim.cmd("colorscheme rose-pine")
 		end,
 	},
+	-- https://github.com/oca159/lazyvim/blob/main/lua/plugins/codecompanion.lua
 	{
 		"olimorris/codecompanion.nvim",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"nvim-treesitter/nvim-treesitter",
+			{ "MeanderingProgrammer/render-markdown.nvim", ft = { "markdown", "codecompanion" } },
 		},
 		config = function()
 			require("codecompanion").setup({
@@ -283,7 +292,7 @@ require("lazy").setup({
 					openai = function()
 						return require("codecompanion.adapters").extend("openai", {
 							env = {
-								api_key = "cmd:op read op://personal/OpenAI/credential --no-newline",
+								api_key = "cmd:pass openai_api_key",
 							},
 						})
 					end,
@@ -532,6 +541,15 @@ require("lazy").setup({
 					grep_string = file_selection_mapping,
 				},
 				defaults = {
+					layout_strategy = "horizontal",
+					layout_config = {
+						horizontal = {
+							prompt_position = "bottom",
+							width = { padding = 0 },
+							height = { padding = 0 },
+							preview_width = 0.6,
+						},
+					},
 					-- add tab, ct and c-t maps only to file selectors
 					mappings = {
 						i = {
@@ -965,13 +983,6 @@ require("lazy").setup({
 
 			---@diagnostic disable-next-line: missing-fields
 			require("nvim-treesitter.configs").setup(opts)
-
-			-- There are additional nvim-treesitter modules that you can use to interact
-			-- with nvim-treesitter. You should go explore a few and see what interests you:
-			--
-			--    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-			--    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-			--    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
 		end,
 	},
 	{
