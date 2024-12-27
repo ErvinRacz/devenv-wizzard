@@ -3,7 +3,7 @@ TERM = "xterm-256color"
 
 [terminal.shell]
 program = "wsl"
-args = ["-d", "Ubuntu-24.04", "--cd", "~"]
+args = ["-d", "Ubuntu-24.10", "--cd", "~"]
 
 [font]
 normal = { family = "JetBrainsMono Nerd Font Mono" }

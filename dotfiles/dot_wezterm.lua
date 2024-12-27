@@ -83,7 +83,7 @@ config.window_background_opacity = 1
 config.initial_rows = 40
 config.initial_cols = 140
 
-local def_dom = "WSL:Ubuntu-24.04"
+local def_dom = "WSL:Ubuntu-24.10"
 config.default_domain = def_dom
 
 -- and finally, return the configuration to wezterm

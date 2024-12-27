@@ -45,7 +45,7 @@ properties:
       # dependsOn:
       #   - InstallUbuntu
       directives:
-        description: Set Ubuntu 24.04 as the default WSL distribution
+        description: Set Ubuntu 24.10 as the default WSL distribution
         allowPrerelease: true
       settings:
         GetScript: |
@@ -57,8 +57,8 @@ properties:
           $filteredString = -join ($cleanedStr.ToCharArray() | Where-Object { $_ -match '[UuBbTtNnUu]' })
           return $filteredString.Contains("Ubuntu")
         SetScript: |
-          # Set Ubuntu-24.04 as the default WSL distribution
-          wsl --set-default Ubuntu-24.04
+          # Set Ubuntu-24.10 as the default WSL distribution
+          wsl --set-default Ubuntu-24.10
 
     # Script resource to install Ansible on Ubuntu in WSL
     - resource: PSDscResources/Script
