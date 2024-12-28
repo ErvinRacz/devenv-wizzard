@@ -29,4 +29,5 @@ bind --mode insert :q exit
 
 bind yy fish_clipboard_copy
 bind Y fish_clipboard_copy
+bind y fish_clipboard_copy
 bind p fish_clipboard_paste

@@ -169,7 +169,7 @@
         path: "$HOME/.nvm"
       register: nvm_path
 
-    - name: Setup ASDF and install node version
+    - name: Setup ASDF and install plugins version
       block:
         - name: Clone ASDF repository
           shell: >
