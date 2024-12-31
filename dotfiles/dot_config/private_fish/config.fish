@@ -7,11 +7,12 @@ fish_vi_key_bindings
 starship init fish | source
 
 set -a PATH /opt/nvim-linux64/bin
-set -a PATH /usr/local/go/bin
 set -a PATH ~/go/bin
 set -a PATH ~/bin
 
 source ~/.asdf/asdf.fish
+source ~/.asdf/plugins/golang/set-env.fish
+
 set -gx EDITOR nvim
 bind --erase \cN
 bind --mode insert \cN 'nvim .'

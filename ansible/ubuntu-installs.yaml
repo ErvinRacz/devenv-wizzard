@@ -1,19 +1,24 @@
 ---
 - name: Install packages on Ubuntu
   hosts: localhost
-  become: true
   vars:
-     - go_version: 1.23.3
+     - user: "{{ ansible_facts['user_id'] }}"
      - asdf_version: 0.14.1
      - target_home: "{{ lookup('env', 'HOME') }}"
   environment:
     HOME: "{{ target_home }}"
   tasks:
+    - name: Print the user_id fact
+      become: true
+      ansible.builtin.debug:
+        msg: "The user_id is: {{user}}"
+
     - name: Debug the user and home directory
       ansible.builtin.debug:
         msg: "Home is: {{ target_home }}"
 
     - name: Update the apt package index
+      become: true
       apt:
         update_cache: yes
 
@@ -58,6 +63,7 @@
             state: present
 
         - name: Update apt cache
+          become: true
           apt:
             update_cache: yes
 
@@ -110,64 +116,30 @@
     - name: Install Docker
       block:
         - name: Add an Apt signing key, uses whichever key is at the URL
+          become: true
           ansible.builtin.apt_key:
             url: https://download.docker.com/linux/ubuntu/gpg
             state: present
 
         - name: Add Docker repository
+          become: true
           apt_repository:
             repo: deb https://download.docker.com/linux/ubuntu noble stable
             state: present
 
         - name: Install Docker
+          become: true
           apt:
             name: docker-ce
             state: present
             update_cache: yes
 
         - name: Start Docker service
+          become: true
           service:
             name: docker
             state: started
             enabled: yes
-
-    # Install Go
-
-    - stat:
-        path: "/usr/local/go/bin/go"
-      register: go_installed
-
-    - name: Install Go
-      block:
-        - name: Download Go tar file
-          command: wget https://go.dev/dl/go{{go_version}}.linux-amd64.tar.gz
-
-        - name: Delete previous installation
-          command: rm -rf /usr/local/go
-
-        - name: Extract and move new Go folder to /usr/local
-          command: tar -C /usr/local -xzf go{{go_version}}.linux-amd64.tar.gz
-
-        - name: Delete downloaded tar file
-          shell: rm -rf go{{go_version}}.linux-amd64.tar.gz*
-
-        - name: Add Go binary path to ~/.profile
-          lineinfile:
-            path: ~/.profile
-            line: |
-              export PATH=$PATH:/usr/local/go/bin
-              # export XDG_CONFIG_HOME="~/.config"
-            create: true
-            state: present
-
-        - name: Source updated profile
-          shell: . ~/.profile
-      when: go_installed.stat.exists == false
-
-    # test if nvm has been installed by the user desired
-    - stat:
-        path: "$HOME/.nvm"
-      register: nvm_path
 
     - name: Setup ASDF and install plugins version
       block:
@@ -200,6 +172,12 @@
           args:
             chdir: "$HOME"
 
+        - name: Install ASDF Node.js plugin
+          shell: >
+            fish -c "source ~/.asdf/asdf.fish && asdf plugin add golang https://github.com/asdf-community/asdf-golang.git || true"
+          args:
+            chdir: "$HOME"
+
     - name: Install Node.js versions using ASDF
       shell: >
         fish -c "asdf install nodejs {{ item }} --latest && asdf global nodejs {{ item }} && npm install -g @fsouza/prettierd"
@@ -209,6 +187,15 @@
       loop:
         - 16.20.0
         - 22.12.0
+
+    - name: Install Golang versions using ASDF
+      shell: >
+        fish -c "asdf install golang {{ item }} --latest && asdf global golang {{ item }}"
+      args:
+        chdir: "$HOME"
+        creates: "$HOME/.asdf/installs/nodejs/{{ item }}"
+      loop:
+        - 1.23.4
 
     - name: Install Starship Prompt
       block:
