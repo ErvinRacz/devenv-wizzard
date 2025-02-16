@@ -4,6 +4,7 @@ Install the stack with chezmoi on Windows:
 
 ```
 winget install --id Microsoft.PowerShell --source winget
+winget configure --enable
 ```
 &&
 ```
