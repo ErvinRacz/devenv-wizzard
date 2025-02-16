@@ -1,7 +1,14 @@
 TODO: https://github.com/apps/desktop
 
 Install the stack with chezmoi on Windows:
-`& {$env:DOTFILE_REPO_URL = "https://github.com/ErvinRacz/devenv-wizzard.git" ; iex "&{$(irm 'https://get.chezmoi.io/ps1')} -b '$env:USERPROFILE\.temp\bin' -- init --apply $env:DOTFILE_REPO_URL"}`
+
+```
+winget install --id Microsoft.PowerShell --source winget
+```
+&&
+```
+& {$env:DOTFILE_REPO_URL = "https://github.com/ErvinRacz/devenv-wizzard.git" ; iex "&{$(irm 'https://get.chezmoi.io/ps1')} -b '$env:USERPROFILE\.temp\bin' -- init --apply $env:DOTFILE_REPO_URL"}
+```
 
 Add chezmoi config to WSL:
 
