@@ -650,7 +650,7 @@ require("lazy").setup({
 			local builtin = require("telescope.builtin")
 			vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
 			vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
-			vim.keymap.set("n", "<C-n>", builtin.find_files, { desc = "Search Files" })
+			vim.keymap.set("n", "<C-p>", builtin.find_files, { desc = "Search Files" })
 			vim.keymap.set("n", "<leader>ss", builtin.builtin, { desc = "[S]earch [S]elect Telescope" })
 			vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "[S]earch current [W]ord" })
 			vim.keymap.set("n", "<C-f>", builtin.live_grep, { desc = "Search by Grep" })
@@ -917,6 +917,7 @@ require("lazy").setup({
 			formatters_by_ft = {
 				lua = { "stylua" },
 				javascript = { { "prettierd" } },
+				json = { { "prettierd" } },
 			},
 		},
 	},
